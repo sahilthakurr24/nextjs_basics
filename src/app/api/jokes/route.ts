@@ -1,7 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import {filterSafeJokes,normalizeJokes} from "../../../utils/helpers"
+import { filterSafeJokes, normalizeJokes } from "../../../utils/helpers";
 
+interface Joke {
+  categories: string[];
+  content: string;
+  id: number;
+}
 
+interface JokeData {
+  currentPageItems: number;
+  data: Joke[];
+  limit: number;
+  nextPage: boolean;
+  page: number;
+  previousPage: boolean;
+  totalItems: number;
+  totalPages: number;
+}
+
+interface JokeResponse {
+  data: JokeData;
+  message: string;
+  statusCode: number;
+  success: boolean;
+}
 
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
@@ -33,7 +55,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const payload = (await upstreamResponse.json()) as unknown;
+  const payload = (await upstreamResponse.json()) as JokeResponse;
 
   return NextResponse.json({
     query,
